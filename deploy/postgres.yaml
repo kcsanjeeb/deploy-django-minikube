@@ -35,7 +35,7 @@ spec:
     spec:
       volumes:
         - name: postgres-data
-          PersistentVolumeClaim:
+          persistentVolumeClaim:
             claimName: django-postgres-pvc
       containers:
         - image: postgres:15.2
