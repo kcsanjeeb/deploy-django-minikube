@@ -16,7 +16,7 @@ spec:
 
 apiVersion: v1
 kind: PersistentVolumeClaim
-metadata: 
+metadata:
   name: django-app-pvc
   labels:
     app: django
@@ -33,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: django
-  labels: 
+  labels:
     app: django
 spec:
   selector:
@@ -53,9 +53,13 @@ spec:
           persistentVolumeClaim:
             claimName: django-app-pvc
       containers:
+
         - image: django-app:latest
           imagePullPolicy: Never
           name: app
+          ports:
+            - containerPort: 8080
+              name: app
           volumeMounts:
             - name: django-app-data
               mountPath: /vol/web
@@ -70,7 +74,7 @@ spec:
               value: '127.0.0.1,localhost'
             - name: DB_PASS
               valueFrom:
-                secretKeyRef: 
+                secretKeyRef:
                   name: db-password
                   key: password
             - name: SECRET_KEY
@@ -78,7 +82,7 @@ spec:
                 secretKeyRef:
                   name: django
                   key: secret
-        
+
         - image: django-proxy:latest
           imagePullPolicy: Never
           name: proxy
@@ -92,7 +96,4 @@ spec:
             - name: APP_HOST
               value: '127.0.0.1'
             - name: APP_PORT
-              value: '8000'
-
-
-
+              value: '8080'
